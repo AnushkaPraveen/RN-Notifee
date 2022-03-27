@@ -13,7 +13,7 @@ import {
   Button
 } from 'react-native';
 import notifee from '@notifee/react-native';
-import {display,getNotification,setCategories} from './app/notification';
+import {display,getNotification,setNotification} from './app/notification';
 import NotificationHandler from './app/notification';
 
 
@@ -71,7 +71,7 @@ const testNotification=()=>{
     <Button title="Notification Function" onPress={testNotification}/>
     </View>
     <View style={{marginTop:10}}>
-    <Button title="Notification Function" onPress={setCategories}/>
+    <Button title="Set Notification" onPress={setNotification}/>
     </View>
     </View>
   );
