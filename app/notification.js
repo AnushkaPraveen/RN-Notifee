@@ -7,7 +7,11 @@ export const display=()=>{
     console.log('Notification Functions');
     console.log('====================================');
 }
-
+ export default class NotificationHandler{
+     handleNotifee=()=>{
+         console.log('this is class function');
+     }
+ }
 
 export const getNotification=async(data)=>{
 
@@ -23,6 +27,22 @@ notifee.onForegroundEvent(({type,detail})=>{
       id: 'default',
       name: 'Default Channel',
     });
+
+    await notifee.setNotificationCategories([
+        {
+            id: 'post',
+            actions: [
+              {
+                id: 'like',
+                title: 'Like Post',
+              },
+              {
+                id: 'dislike',
+                title: 'Dislike Post',
+              },
+            ],
+          },
+    ])
 
   
    await notifee.displayNotification({
@@ -51,4 +71,10 @@ notifee.onForegroundEvent(({type,detail})=>{
         ]
         
       },
+      ios:{
+       categoryId:'post'
+      }
     })}
+
+
+    

@@ -13,15 +13,17 @@ import {
   Button
 } from 'react-native';
 import notifee from '@notifee/react-native';
-import {display,getNotification} from './app/notification';
+import {display,getNotification,setCategories} from './app/notification';
+import NotificationHandler from './app/notification';
 
 
-
+let notifciationHandler=new NotificationHandler();
 
 const App = () => {
   
 useEffect(()=>{
  display()
+ notifciationHandler.handleNotifee()
  
 },[])
 
@@ -67,6 +69,9 @@ const testNotification=()=>{
     <Button title="get notification" onPress={onDisplayNotification}/>
     <View style={{marginTop:10}}>
     <Button title="Notification Function" onPress={testNotification}/>
+    </View>
+    <View style={{marginTop:10}}>
+    <Button title="Notification Function" onPress={setCategories}/>
     </View>
     </View>
   );
