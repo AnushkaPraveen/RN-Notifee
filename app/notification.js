@@ -3,7 +3,6 @@ import notifee,{AndroidStyle,AndroidColor,EventType} from '@notifee/react-native
 
 export const display=()=>{
     console.log('====================================');
-   
     console.log('Notification Functions');
     console.log('====================================');
 }
@@ -28,17 +27,17 @@ notifee.onForegroundEvent(({type,detail})=>{
       name: 'Default Channel',
     });
 
-    await notifee.setNotificationCategories([
+     await notifee.setNotificationCategories([
         {
             id: 'post',
             actions: [
               {
                 id: 'like',
-                title: 'Like Post',
+                title: 'Reply',
               },
               {
                 id: 'dislike',
-                title: 'Dislike Post',
+                title: 'Close',
               },
             ],
           },
@@ -76,5 +75,5 @@ notifee.onForegroundEvent(({type,detail})=>{
       }
     })}
 
-
+   
     
