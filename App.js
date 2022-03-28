@@ -17,24 +17,26 @@ import {display,getNotification,setNotification} from './app/notification';
 import NotificationHandler from './app/notification';
 
 
-let notifciationHandler=new NotificationHandler();
+let notificiationHandler=new NotificationHandler();
 
 const App = () => {
   
 useEffect(()=>{
  display()
- notifciationHandler.handleNotifee()
+ notificiationHandler.handleNotifee()
  
 },[])
 
 const testNotification=()=>{
-  const data={
+  const payload={
     channelId:'test',
     name:'default',
-    title:'App Notification',
-    body:'This is notifciation pass by function '
+    notificationId:'123',
+    title:'Test',
+    body:'This is notifciation pass by function hshdus suhdsihd sygdsud ugsdsdg sgdusgd gyudgs',
+    color:'#139487'
   }
-  getNotification(data);
+  notificiationHandler.getNotification(payload);
 }
 
 
