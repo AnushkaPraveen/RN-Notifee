@@ -12,7 +12,7 @@ import {
   View,
   Button
 } from 'react-native';
-import notifee from '@notifee/react-native';
+import notifee, { TimestampTrigger, TriggerType, TimeUnit  } from '@notifee/react-native';
 import {display,getNotification,setNotification} from './app/notification';
 import NotificationHandler from './app/notification';
 
@@ -38,7 +38,9 @@ const testNotification=()=>{
   }
   notificiationHandler.getNotification(payload);
 }
-
+const cancelNotification=()=>{
+  notificiationHandler.cancelNotification('123')
+}
 
   const onDisplayNotification=async()=>{
     const channelId = await notifee.createChannel({
@@ -54,14 +56,47 @@ const testNotification=()=>{
       android: {
         channelId,
         smallIcon: 'ic_launcher', // optional, defaults to 'ic_launcher'.
-        
-        
       },
     });
+  }
 
- 
+
+  const onCreateTriggerNotification=async()=> {
+    const date = new Date(Date.now());
+    console.log(date);
+    date.setHours(1);
+    date.setMinutes(26);
+
+    // Create a time-based trigger
+    /* const trigger= {
+      type: TriggerType.TIMESTAMP,
+      timestamp: date.getTime(), // fire at 11:10am (10 minutes before meeting)
+    }; */
+
+    const trigger=IntervalTrigger = {
+      type: TriggerType.INTERVAL,
+      interval: 15,
+      timeUnit: TimeUnit.MINUTES
+    };
 
 
+
+
+    const channelId = await notifee.createChannel({
+      id: 'default',
+      name: 'Default Channel',
+    });
+    // Create a trigger notification
+    await notifee.createTriggerNotification(
+      {
+        title: 'Meeting with Jane',
+        body: 'Today at 11:20am',
+        android: {
+          channelId
+        },
+      },
+      trigger,
+    );
   }
 
   return (
@@ -73,7 +108,13 @@ const testNotification=()=>{
     <Button title="Notification Function" onPress={testNotification}/>
     </View>
     <View style={{marginTop:10}}>
-    <Button title="Set Notification" onPress={setNotification}/>
+    <Button title="Set Notification" onPress={notificiationHandler.updateNotification}/>
+    </View>
+    <View style={{marginTop:10}}>
+    <Button title="Cancel Notification" onPress={cancelNotification}/>
+    </View>
+    <View style={{marginTop:10}}>
+    <Button title="Schedule Notification" onPress={onCreateTriggerNotification}/>
     </View>
     </View>
   );
