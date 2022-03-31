@@ -34,7 +34,34 @@ const testNotification=()=>{
     notificationId:'123',
     title:'Test',
     body:'This is notifciation pass by function hshdus suhdsihd sygdsud ugsdsdg sgdusgd gyudgs',
-    color:'#139487'
+    color:'red',
+    AndroidActions:[
+      {
+        title:'test',
+        pressAction:{
+          id:'test1'
+        }
+      },
+      {
+        title:'test 2',
+        pressAction:{
+          id:'test1'
+        }
+      },
+      {
+        title:'test 3',
+        pressAction:{
+          id:'test1'
+        }
+      }
+    ],
+    IosActionId:'post',
+    IosActions:[
+      {
+        title:'test',
+        id:'test'
+    }
+  ]
   }
   notificiationHandler.getNotification(payload);
 }
@@ -64,20 +91,20 @@ const cancelNotification=()=>{
   const onCreateTriggerNotification=async()=> {
     const date = new Date(Date.now());
     console.log(date);
-    date.setHours(1);
-    date.setMinutes(26);
+    date.setHours(13);
+    date.setMinutes(41);
 
     // Create a time-based trigger
-    /* const trigger= {
+    const trigger= {
       type: TriggerType.TIMESTAMP,
       timestamp: date.getTime(), // fire at 11:10am (10 minutes before meeting)
-    }; */
+    };
 
-    const trigger=IntervalTrigger = {
+  /*   const trigger=IntervalTrigger = {
       type: TriggerType.INTERVAL,
       interval: 15,
       timeUnit: TimeUnit.MINUTES
-    };
+    }; */
 
 
 
@@ -91,6 +118,7 @@ const cancelNotification=()=>{
       {
         title: 'Meeting with Jane',
         body: 'Today at 11:20am',
+        showTimestamp: true,
         android: {
           channelId
         },

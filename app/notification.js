@@ -13,32 +13,27 @@ export default class NotificationHandler {
   handleNotifee = () => {
     console.log('this is class function');
   }
-
+ 
+  getIOSPermission=async()=>{
+    await notifee.requestPermission();
+  }
 
   getNotification = async (payload) => {
-    const numbers = [4, 9];
-
-    for(let i=0;i<numbers.length;i++){
-    console.log(  `{
-        title:'test',
-        pressAction:{
-          id:'test1'
-        }
-      }`    )}
-
-      const action=[{title:'test',
-      pressAction:{
-        id:'test1'
-      }}]
-console.log(action);
+     
     const channelId = await notifee.createChannel({
       id: payload.channelId || 'default',
       name: payload.name || 'default channel',
     });
-
-
     
-    await notifee.requestPermission();
+    await notifee.setNotificationCategories([
+      {
+          id: payload.IosActionId || 'default',
+          actions: 
+            payload.IosActions || []
+          
+        },
+     ])     
+
     await notifee.displayNotification({
       id: payload.notificationId || '111',
       title: payload.title || 'default',
@@ -49,8 +44,11 @@ console.log(action);
         style: { type: AndroidStyle.BIGTEXT, text: payload.body },
         showTimestamp: true,
         color: payload.color || '#495371',
-         
+        actions:payload.AndroidActions || []
       },
+      ios:{
+        categoryId: payload.IosActionId || 'default',
+      }
 
     })
   }
