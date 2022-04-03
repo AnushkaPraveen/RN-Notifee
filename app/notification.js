@@ -1,8 +1,14 @@
 
 import { Platform } from 'react-native';
 import notifee, { AndroidStyle, AndroidColor, EventType,AndroidImportance,AndroidVisibility } from '@notifee/react-native';
+import {
+ Alert
+} from 'react-native';
 
-export const display = () => {
+
+export const display = async() => {
+  const access=await notifee.requestPermission();
+  console.log(access);
   console.log('====================================');
   console.log('Notification Functions');
   console.log(Platform.OS);
@@ -81,6 +87,9 @@ try{
       },
       ios:{
         categoryId: payload.IosActionId || 'default',
+        attachments: 
+          payload.IosImage || []
+        
       }
 
     })
@@ -152,6 +161,63 @@ try{
     });
     
   }
+
+
+  batteryOptimizationEnabled =async()=>{
+    
+  const batteryOptimizationEnabled =await notifee.isBatteryOptimizationEnabled();
+  if (batteryOptimizationEnabled) {
+    // 2. ask your users to disable the feature
+    Alert.alert(
+        'Restrictions Detected',
+        'To ensure notifications are delivered, please disable battery optimization for the app.',
+        [
+          // 3. launch intent to navigate the user to the appropriate screen
+          {
+            text: 'OK, open settings',
+            onPress: async () => await notifee.openBatteryOptimizationSettings(),
+          },
+          {
+            text: "Cancel",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel"
+          },
+        ],
+        { cancelable: false }
+      );
+  };
+}
+
+
+
+powerMangement=async()=>{
+  console.log("working");
+const powerManagerInfo = await notifee.getPowerManagerInfo();
+console.log(powerManagerInfo);
+if (powerManagerInfo.activity) {
+  
+  // 2. ask your users to adjust their settings
+  Alert.alert(
+      'Restrictions Detected',
+      'To ensure notifications are delivered, please adjust your settings to prevent the app from being killed',
+      [
+        // 3. launch intent to navigate the user to the appropriate screen
+        {
+          text: 'OK, open settings',
+          onPress: async () => await notifee.openPowerManagerSettings(),
+        },
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+      ],
+      { cancelable: false }
+    );
+};}
+
+
+
 
 }
 

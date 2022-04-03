@@ -10,7 +10,7 @@ import {
   Text,
   useColorScheme,
   View,
-  Button
+  Button,Alert
 } from 'react-native';
 import notifee, { TimestampTrigger, TriggerType, TimeUnit ,AndroidVisibility,AndroidCategory,AndroidImportance } from '@notifee/react-native';
 import {display,getNotification,setNotification} from './app/notification';
@@ -66,7 +66,12 @@ const testNotification=()=>{
         title:'test',
         id:'test'
     }
-  ]
+  ],
+  IosImage:[{
+    
+    url: 'https://media.istockphoto.com/photos/mountain-landscape-picture-id517188688',
+    thumbnailHidden:false,
+  }],
   }
   notificiationHandler.getNotification(payload);
 }
@@ -139,6 +144,36 @@ const cancelNotification=()=>{
     );
   }
 
+
+
+  const batteryOptimizationEnabled =async()=>{
+    const batteryOptimizationEnabled =await notifee.isBatteryOptimizationEnabled();
+    if (batteryOptimizationEnabled) {
+      // 2. ask your users to disable the feature
+      Alert.alert(
+          'Restrictions Detected',
+          'To ensure notifications are delivered, please disable battery optimization for the app.',
+          [
+            // 3. launch intent to navigate the user to the appropriate screen
+            {
+              text: 'OK, open settings',
+              onPress: async () => await notifee.openBatteryOptimizationSettings(),
+            },
+            {
+              text: "Cancel",
+              onPress: () => console.log("Cancel Pressed"),
+              style: "cancel"
+            },
+          ],
+          { cancelable: false }
+        );
+    };}
+
+
+
+
+
+
   return (
     <View style={{flex:1,alignItems:'center',justifyContent:'center'}}>
     
@@ -158,6 +193,9 @@ const cancelNotification=()=>{
     </View>
     <View style={{marginTop:10}}>
     <Button title="Progress Notification" onPress={notificiationHandler.progressNotification}/>
+    </View>
+    <View style={{marginTop:10}}>
+    <Button title="Optimization" onPress={notificiationHandler.powerMangement}/>
     </View>
     </View>
   );
