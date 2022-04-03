@@ -12,7 +12,7 @@ import {
   View,
   Button
 } from 'react-native';
-import notifee, { TimestampTrigger, TriggerType, TimeUnit  } from '@notifee/react-native';
+import notifee, { TimestampTrigger, TriggerType, TimeUnit ,AndroidVisibility,AndroidCategory,AndroidImportance } from '@notifee/react-native';
 import {display,getNotification,setNotification} from './app/notification';
 import NotificationHandler from './app/notification';
 
@@ -28,13 +28,18 @@ useEffect(()=>{
 },[])
 
 const testNotification=()=>{
+  
   const payload={
-    channelId:'test',
-    name:'default',
-    notificationId:'123',
-    title:'Test',
+    channelId:'test41',
+    name:'default1f',
+    notificationId:'1234',
+    importance:4,
+    title:'Test fff',
     body:'This is notifciation pass by function hshdus suhdsihd sygdsud ugsdsdg sgdusgd gyudgs',
-    color:'red',
+    color:'#523b82',
+    /* Icon:require('./app/wta.png'),  */
+    /* Icon:'https://drive.google.com/file/d/1cwoCxrH7bC-v6hlddClZEPh3MPymvIrn/view?usp=sharing', */
+    image:{type:0,picture:'https://media.istockphoto.com/photos/mountain-landscape-picture-id517188688'},
     AndroidActions:[
       {
         title:'test',
@@ -82,7 +87,14 @@ const cancelNotification=()=>{
       body: 'Main body content of the notification',
       android: {
         channelId,
-        smallIcon: 'ic_launcher', // optional, defaults to 'ic_launcher'.
+        smallIcon: 'ic_launcher',  // optional, defaults to 'ic_launcher'.
+         // Recommended to set a category
+    category: AndroidCategory.CALL,
+    // Recommended to set importance to high
+    importance: AndroidImportance.HIGH,
+    fullScreenAction: {
+      id: 'default',
+    },
       },
     });
   }
@@ -92,7 +104,7 @@ const cancelNotification=()=>{
     const date = new Date(Date.now());
     console.log(date);
     date.setHours(13);
-    date.setMinutes(41);
+    date.setMinutes(54);
 
     // Create a time-based trigger
     const trigger= {
@@ -143,6 +155,9 @@ const cancelNotification=()=>{
     </View>
     <View style={{marginTop:10}}>
     <Button title="Schedule Notification" onPress={onCreateTriggerNotification}/>
+    </View>
+    <View style={{marginTop:10}}>
+    <Button title="Progress Notification" onPress={notificiationHandler.progressNotification}/>
     </View>
     </View>
   );
