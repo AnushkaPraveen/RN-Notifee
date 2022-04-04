@@ -64,7 +64,10 @@ const testNotification=()=>{
     IosActions:[
       {
         title:'test',
-        id:'test'
+        id:'test',
+        destructive: true,
+          // Only show if device is unlocked
+          authenticationRequired: true,
     }
   ],
   IosImage:[{
@@ -195,7 +198,7 @@ const cancelNotification=()=>{
     <Button title="Progress Notification" onPress={notificiationHandler.progressNotification}/>
     </View>
     <View style={{marginTop:10}}>
-    <Button title="Optimization" onPress={notificiationHandler.powerMangement}/>
+    <Button title="Optimization" onPress={notificiationHandler.setBadgeCount}/>
     </View>
     </View>
   );

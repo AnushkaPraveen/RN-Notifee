@@ -1,6 +1,6 @@
 
 import { Platform } from 'react-native';
-import notifee, { AndroidStyle, AndroidColor, EventType,AndroidImportance,AndroidVisibility } from '@notifee/react-native';
+import notifee, { AndroidStyle, AndroidColor, EventType,AndroidImportance,AndroidVisibility,AuthorizationStatus  } from '@notifee/react-native';
 import {
  Alert
 } from 'react-native';
@@ -22,12 +22,30 @@ export default class NotificationHandler {
   }
  
   getIOSPermission=async()=>{
-    await notifee.requestPermission();
+    await notifee.requestPermission({
+      
+    });
+   
+      const settings = await notifee.requestPermission();
+    
+      if (settings.authorizationStatus >= AuthorizationStatus.AUTHORIZED) {
+        console.log('Permission settings:', settings);
+      } else {
+        console.log('User declined permissions');
+      }
+    
+    
   }
 
   getNotification = async (payload) => {
 
-    notifee.onForegroundEvent(({ type, detail }) => {
+    notifee.onForegroundEvent(async({ type, detail }) => {
+      if (type === EventType.ACTION_PRESS && detail.pressAction.id) {
+        console.log('User pressed an action with the id: ', detail.pressAction.id);
+      }
+    });
+
+    notifee.onBackgroundEvent(({ type, detail }) => {
       if (type === EventType.ACTION_PRESS && detail.pressAction.id) {
         console.log('User pressed an action with the id: ', detail.pressAction.id);
       }
@@ -68,7 +86,7 @@ try{
       body: payload.body,
       android: {
         channelId,
-       largeIcon:payload.Icon || 'ic_launcher',
+        largeIcon:payload.Icon || 'ic_launcher',
         smallIcon: 'ic_launcher', // optional, defaults to 'ic_launcher'.
         style: { type: AndroidStyle.BIGTEXT, text: payload.body },
         style: payload.image || undefined,
@@ -87,10 +105,17 @@ try{
       },
       ios:{
         categoryId: payload.IosActionId || 'default',
+        sound: 'default',
+        critical: true,
         attachments: 
           payload.IosImage || []
         
-      }
+      },
+      foregroundPresentationOptions: {
+        alert: true,
+        badge: true,
+        sound: true,
+      },
 
     })
   }catch(e){
@@ -216,8 +241,12 @@ if (powerManagerInfo.activity) {
     );
 };}
 
-
-
+getBadgeCount=()=>{
+  notifee.getBadgeCount().then(count => console.log('Current badge count: ', count));
+}
+setBadgeCount=(count)=>{
+  notifee.setBadgeCount(count).then(() => console.log('Badge count set!'));
+}
 
 }
 
