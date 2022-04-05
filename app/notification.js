@@ -1,30 +1,20 @@
 
 import { Platform } from 'react-native';
-import notifee, { AndroidStyle, AndroidColor, EventType,AndroidImportance,AndroidVisibility,AuthorizationStatus,TimestampTrigger, TriggerType,TimeUnit, RepeatFrequency  } from '@notifee/react-native';
+import notifee, { AndroidStyle,AndroidCategory, AndroidColor, EventType,AndroidImportance,AndroidVisibility,AuthorizationStatus,TimestampTrigger, TriggerType,TimeUnit, RepeatFrequency  } from '@notifee/react-native';
 import {
  Alert
 } from 'react-native';
 
-
-export const display = async() => {
-  const access=await notifee.requestPermission();
-  console.log(access);
-  console.log('====================================');
-  console.log('Notification Functions');
-  console.log(Platform.OS);
-  console.log(Platform.Version);
-  console.log('====================================');
-}
 export default class NotificationHandler {
   
   handleNotifee = () => {
-    console.log('this is class function');
+    console.log('====================================');
+    console.log('Notifee Library functions');
+    console.log('====================================');
   }
  
   getIOSPermission=async()=>{
-    await notifee.requestPermission({
-      
-    });
+    await notifee.requestPermission();
    
       const settings = await notifee.requestPermission();
     
@@ -43,6 +33,10 @@ export default class NotificationHandler {
       if (type === EventType.ACTION_PRESS && detail.pressAction.id) {
         console.log('User pressed an action with the id: ', detail.pressAction.id);
       }
+
+      if (type === EventType.DISMISSED) {
+        console.log('User toggled app blocked');
+      }
     });
 
     notifee.onBackgroundEvent(({ type, detail }) => {
@@ -51,7 +45,7 @@ export default class NotificationHandler {
       }
     });
 
-    notifee.registerForegroundService((notification) => {
+    notifee.registerForegroundService(() => {
       return new Promise(() => {
         // Long running task...
       });
@@ -59,15 +53,15 @@ export default class NotificationHandler {
     
 
    
-console.log('pority',AndroidImportance.HIGH);
+
     const channelId = await notifee.createChannel({
       id: payload.channelId || 'default',
       name: payload.name || 'default channel',
       importance: payload.importance || 3,
-      vibration: true,
-      lights:true,
+      vibration: payload.vibration || true,
+      lights:payload.light || true,
       visibility:payload.visibility || 0,
-    /*   badge:payload.badge || false */
+    
     });
     
     await notifee.setNotificationCategories([
@@ -90,12 +84,12 @@ try{
         smallIcon: 'ic_launcher', // optional, defaults to 'ic_launcher'.
         style: { type: AndroidStyle.BIGTEXT, text: payload.body },
         style: payload.image || undefined,
-        showTimestamp: true,
+        showTimestamp: payload.time || true,
         importance: payload.importance || 3,
         color: payload.color || '#495371',
         visibility:payload.visibility || 0,
         ongoing:payload.ongoing || false,
-        asForegroundService: false,
+        asForegroundService: payload.foregroundService || false,
         colorized: payload.colorized || false,
         pressAction: {
           id: 'default',
@@ -123,7 +117,7 @@ try{
 
 
   notifee.onForegroundEvent(({ type, detail }) => {
-    if (type === EventType.APP_BLOCKED) {
+    if (type === EventType.DISMISSED) {
       console.log('User toggled app blocked', detail.blocked);
     }
   
@@ -161,23 +155,23 @@ try{
    scheduleNotification=async()=> {
     const date = new Date(Date.now());
     console.log(date);
-    date.setHours(0);
-    date.setMinutes(34);
+    date.setHours(16);
+    date.setMinutes(21);
     console.log(date.getTime());
 
     // Create a time-based trigger
     const trigger= {
       type: TriggerType.TIMESTAMP,
       timestamp: date.getTime(), // fire at 11:10am (10 minutes before meeting)
-      repeatFrequency:RepeatFrequency.WEEKLY
+      
     }; 
 
-   const triggerrepeat = {
+  /*  const triggerrepeat = {
       type: TriggerType.INTERVAL,
       interval: 30,
       timeUnit: TimeUnit.DAYS,
       
-    }; 
+    };  */
 
 
 
@@ -193,10 +187,16 @@ try{
         body: 'Today at 11:20am',
         showTimestamp: true,
         android: {
-          channelId
+          channelId,
+          category: AndroidCategory.MESSAGE,
+    // Recommended to set importance to high
+    importance: AndroidImportance.HIGH,
+    fullScreenAction: {
+      id: 'default',
+    },
         },
       },
-      triggerrepeat,
+      trigger,
     );
   }
 
@@ -221,8 +221,11 @@ try{
     });
 
     notifee.displayNotification({
+      title: 'Meeting with Jane',
+        body: 'Today at 11:20am',
       android: {
         channelId,
+       
         progress: {
           max: 10,
           current: 5,
@@ -262,9 +265,9 @@ try{
 
 
 powerMangement=async()=>{
-  console.log("working");
+ 
 const powerManagerInfo = await notifee.getPowerManagerInfo();
-console.log(powerManagerInfo);
+
 if (powerManagerInfo.activity) {
   
   // 2. ask your users to adjust their settings

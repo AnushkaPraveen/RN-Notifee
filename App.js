@@ -22,7 +22,7 @@ let notificiationHandler=new NotificationHandler();
 const App = () => {
   
 useEffect(()=>{
- display()
+ 
  notificiationHandler.handleNotifee()
  
 },[])
@@ -37,9 +37,10 @@ const setNotification=()=>{
     title:'Test upted check 1',
     body:'This is notifciation pass by function hshdus suhdsihd sygdsud ugsdsdg sgdusgd gyudgs',
     color:'#523b82',
+    foregroundService:true,
     /* Icon:require('./app/wta.png'),  */
     /* Icon:'https://drive.google.com/file/d/1cwoCxrH7bC-v6hlddClZEPh3MPymvIrn/view?usp=sharing', */
-    image:{type:0,picture:'https://media.istockphoto.com/photos/mountain-landscape-picture-id517188688'},
+    /* image:{type:0,picture:'https://media.istockphoto.com/photos/mountain-landscape-picture-id517188688'}, */
     AndroidActions:[
       {
         title:'test',
