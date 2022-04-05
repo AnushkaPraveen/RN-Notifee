@@ -1,6 +1,6 @@
 
 import { Platform } from 'react-native';
-import notifee, { AndroidStyle, AndroidColor, EventType,AndroidImportance,AndroidVisibility,AuthorizationStatus  } from '@notifee/react-native';
+import notifee, { AndroidStyle, AndroidColor, EventType,AndroidImportance,AndroidVisibility,AuthorizationStatus,TimestampTrigger, TriggerType,TimeUnit, RepeatFrequency  } from '@notifee/react-native';
 import {
  Alert
 } from 'react-native';
@@ -106,7 +106,6 @@ try{
       ios:{
         categoryId: payload.IosActionId || 'default',
         sound: 'default',
-        critical: true,
         attachments: 
           payload.IosImage || []
         
@@ -157,6 +156,53 @@ try{
       },
     }); 
   }
+
+
+   scheduleNotification=async()=> {
+    const date = new Date(Date.now());
+    console.log(date);
+    date.setHours(0);
+    date.setMinutes(34);
+    console.log(date.getTime());
+
+    // Create a time-based trigger
+    const trigger= {
+      type: TriggerType.TIMESTAMP,
+      timestamp: date.getTime(), // fire at 11:10am (10 minutes before meeting)
+      repeatFrequency:RepeatFrequency.WEEKLY
+    }; 
+
+   const triggerrepeat = {
+      type: TriggerType.INTERVAL,
+      interval: 30,
+      timeUnit: TimeUnit.DAYS,
+      
+    }; 
+
+
+
+
+    const channelId = await notifee.createChannel({
+      id: 'default',
+      name: 'Default Channel',
+    });
+    // Create a trigger notification
+    await notifee.createTriggerNotification(
+      {
+        title: 'Meeting with Jane',
+        body: 'Today at 11:20am',
+        showTimestamp: true,
+        android: {
+          channelId
+        },
+      },
+      triggerrepeat,
+    );
+  }
+
+
+
+
 
 
   cancelNotification=async(notificationId)=>{

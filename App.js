@@ -27,14 +27,14 @@ useEffect(()=>{
  
 },[])
 
-const testNotification=()=>{
+const setNotification=()=>{
   
   const payload={
     channelId:'test41',
     name:'default1f',
-    notificationId:'1234',
+    notificationId:'1243',
     importance:4,
-    title:'Test fff',
+    title:'Test upted check 1',
     body:'This is notifciation pass by function hshdus suhdsihd sygdsud ugsdsdg sgdusgd gyudgs',
     color:'#523b82',
     /* Icon:require('./app/wta.png'),  */
@@ -108,44 +108,7 @@ const cancelNotification=()=>{
   }
 
 
-  const onCreateTriggerNotification=async()=> {
-    const date = new Date(Date.now());
-    console.log(date);
-    date.setHours(13);
-    date.setMinutes(54);
-
-    // Create a time-based trigger
-    const trigger= {
-      type: TriggerType.TIMESTAMP,
-      timestamp: date.getTime(), // fire at 11:10am (10 minutes before meeting)
-    };
-
-  /*   const trigger=IntervalTrigger = {
-      type: TriggerType.INTERVAL,
-      interval: 15,
-      timeUnit: TimeUnit.MINUTES
-    }; */
-
-
-
-
-    const channelId = await notifee.createChannel({
-      id: 'default',
-      name: 'Default Channel',
-    });
-    // Create a trigger notification
-    await notifee.createTriggerNotification(
-      {
-        title: 'Meeting with Jane',
-        body: 'Today at 11:20am',
-        showTimestamp: true,
-        android: {
-          channelId
-        },
-      },
-      trigger,
-    );
-  }
+  
 
 
 
@@ -183,7 +146,7 @@ const cancelNotification=()=>{
     <Text>Hello</Text>
     <Button title="get notification" onPress={onDisplayNotification}/>
     <View style={{marginTop:10}}>
-    <Button title="Notification Function" onPress={testNotification}/>
+    <Button title="Notification Function" onPress={setNotification}/>
     </View>
     <View style={{marginTop:10}}>
     <Button title="Set Notification" onPress={notificiationHandler.updateNotification}/>
@@ -192,7 +155,7 @@ const cancelNotification=()=>{
     <Button title="Cancel Notification" onPress={cancelNotification}/>
     </View>
     <View style={{marginTop:10}}>
-    <Button title="Schedule Notification" onPress={onCreateTriggerNotification}/>
+    <Button title="Schedule Notification" onPress={notificiationHandler.scheduleNotification}/>
     </View>
     <View style={{marginTop:10}}>
     <Button title="Progress Notification" onPress={notificiationHandler.progressNotification}/>
