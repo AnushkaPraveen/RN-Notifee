@@ -153,19 +153,26 @@ try{
 
 
    scheduleNotification=async(payload)=> {
-    const date = new Date(Date.now());
+    var date = new Date("04/07/2022 01:08:00"); // some mock date
+    var milliseconds = date.getTime(); 
+    // This will return you the number of milliseconds
+    // elapsed from January 1, 1970 
+    // if your date is less than that date, the value will be negative
+    
+    console.log(milliseconds);
+    /* const date = new Date(Date.now());
     console.log(date);
     date.setHours(15);
     date.setMinutes(30);
-    console.log(date.getTime());
+    console.log(date.getTime()); */
 
     // Create a time-based trigger
-    const trigger= {
+   const trigger= {
       type: TriggerType.TIMESTAMP,
-      timestamp: date.getTime(), // fire at 11:10am (10 minutes before meeting)
+      timestamp: date.getTime(), 
       repeatFrequency: payload.repeatType || undefined
-      
-    }; 
+    
+    };  
 
   /*  const triggerrepeat = {
       type: TriggerType.INTERVAL,
@@ -177,7 +184,7 @@ try{
 
 
 
-    const channelId = await notifee.createChannel({
+   const channelId = await notifee.createChannel({
       id: 'default',
       name: 'Default Channel',
     });
@@ -190,11 +197,14 @@ try{
         showTimestamp: true,
         android: {
           channelId,
+          pressAction: {
+            id: 'default',
+          },
         },
       },
       trigger,
     );
-  }
+  } 
 
 
 
