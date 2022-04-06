@@ -116,7 +116,7 @@ try{
   }
 
 
-  notifee.onForegroundEvent(({ type, detail }) => {
+  /* notifee.onForegroundEvent(({ type, detail }) => {
     if (type === EventType.DISMISSED) {
       console.log('User toggled app blocked', detail.blocked);
     }
@@ -128,7 +128,7 @@ try{
     if (type === EventType.CHANNEL_GROUP_BLOCKED) {
       console.log('User toggled channel group block', detail.channelGroup.id, detail.blocked);
     }
-  });
+  }); */
 
 
   }
@@ -152,17 +152,18 @@ try{
   }
 
 
-   scheduleNotification=async()=> {
+   scheduleNotification=async(payload)=> {
     const date = new Date(Date.now());
     console.log(date);
-    date.setHours(16);
-    date.setMinutes(21);
+    date.setHours(15);
+    date.setMinutes(30);
     console.log(date.getTime());
 
     // Create a time-based trigger
     const trigger= {
       type: TriggerType.TIMESTAMP,
       timestamp: date.getTime(), // fire at 11:10am (10 minutes before meeting)
+      repeatFrequency: payload.repeatType || undefined
       
     }; 
 
@@ -183,17 +184,12 @@ try{
     // Create a trigger notification
     await notifee.createTriggerNotification(
       {
-        title: 'Meeting with Jane',
+        id:payload.notificationId || '1111',
+        title:payload.title || 'Meeting with Jane',
         body: 'Today at 11:20am',
         showTimestamp: true,
         android: {
           channelId,
-          category: AndroidCategory.MESSAGE,
-    // Recommended to set importance to high
-    importance: AndroidImportance.HIGH,
-    fullScreenAction: {
-      id: 'default',
-    },
         },
       },
       trigger,
