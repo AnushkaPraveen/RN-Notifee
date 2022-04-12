@@ -79,6 +79,22 @@ const setNotification=()=>{
   }
   notificiationHandler.getNotification(payload);
 }
+const schedule=()=>{
+  const payload={
+    dateTime:'04/12/2022 00:45:00'
+  }
+  notificiationHandler.scheduleNotification(payload)
+}
+const Timeschedule=()=>{
+  const payload={
+    hour:1,
+    minute:0
+  }
+  notificiationHandler.TimeScheduleNotification(payload)
+}
+
+
+
 const cancelNotification=()=>{
   notificiationHandler.cancelNotification('123')
 }
@@ -156,8 +172,12 @@ const cancelNotification=()=>{
     <Button title="Cancel Notification" onPress={cancelNotification}/>
     </View>
     <View style={{marginTop:10}}>
-    <Button title="Schedule Notification" onPress={notificiationHandler.scheduleNotification}/>
+    <Button title="Schedule Notification" onPress={schedule}/>
     </View>
+    <View style={{marginTop:10}}>
+    <Button title="Time Schedule Notification" onPress={Timeschedule}/>
+    </View>
+    
     <View style={{marginTop:10}}>
     <Button title="Progress Notification" onPress={notificiationHandler.progressNotification}/>
     </View>
