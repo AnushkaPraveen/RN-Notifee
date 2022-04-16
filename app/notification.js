@@ -34,8 +34,13 @@ export default class NotificationHandler {
         console.log('User pressed an action with the id: ', detail.pressAction.id);
       }
 
+      if (type === EventType.PRESS) {
+        console.log('User pressed notification',detail.notification);
+        alert(detail.notification.title)
+      }
       if (type === EventType.DISMISSED) {
-        console.log('User toggled app blocked');
+        console.log('User dismissed notification',detail.notification);
+        alert(detail.notification.title)
       }
     });
 
