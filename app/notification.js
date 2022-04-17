@@ -4,6 +4,7 @@ import notifee, { AndroidStyle,AndroidCategory, AndroidColor, EventType,AndroidI
 import {
  Alert
 } from 'react-native';
+import { initial ,notificationPress} from './function';
 
 export default class NotificationHandler {
   
@@ -28,6 +29,7 @@ export default class NotificationHandler {
   }
 
   getNotification = async (payload) => {
+    initial()
 
     notifee.onForegroundEvent(async({ type, detail }) => {
       if (type === EventType.ACTION_PRESS && detail.pressAction.id) {
@@ -36,7 +38,9 @@ export default class NotificationHandler {
 
       if (type === EventType.PRESS) {
         console.log('User pressed notification',detail.notification);
-        alert(detail.notification.title)
+        /* alert(detail.notification.title) */
+        notificationPress();
+
       }
       if (type === EventType.DISMISSED) {
         console.log('User dismissed notification',detail.notification);
