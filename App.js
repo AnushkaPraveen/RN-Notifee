@@ -15,6 +15,7 @@ import {
 import notifee, { TimestampTrigger, TriggerType, TimeUnit ,AndroidVisibility,AndroidCategory,AndroidImportance } from '@notifee/react-native';
 import {display,getNotification,setNotification} from './app/notification';
 import NotificationHandler from './app/notification';
+import messaging from '@react-native-firebase/messaging';
 
 
 let notificiationHandler=new NotificationHandler();
@@ -24,8 +25,18 @@ const App = () => {
 useEffect(()=>{
  
  notificiationHandler.handleNotifee()
+ const unsubscribe = messaging().onMessage(async remoteMessage => {
+  console.log('A new FCM message arrived!', JSON.stringify(remoteMessage));
+}); 
+
+return unsubscribe; 
  
 },[])
+
+
+
+
+
 
 const setNotification=()=>{
   

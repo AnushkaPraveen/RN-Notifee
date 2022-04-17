@@ -4,6 +4,17 @@ import notifee, { AndroidStyle,AndroidCategory, AndroidColor, EventType,AndroidI
 import {
  Alert
 } from 'react-native';
+import messaging from '@react-native-firebase/messaging';
+
+
+
+
+/* onMessageReceived=async(message)=>{
+  console.log(message);
+}
+
+messaging().onMessage(onMessageReceived);
+messaging().setBackgroundMessageHandler(onMessageReceived); */
 
 export default class NotificationHandler {
   
@@ -12,6 +23,10 @@ export default class NotificationHandler {
     console.log('Notifee Library functions');
     console.log('====================================');
   }
+
+
+  
+
  
   getIOSPermission=async()=>{
     await notifee.requestPermission();
