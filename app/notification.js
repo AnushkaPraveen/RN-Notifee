@@ -4,7 +4,7 @@ import notifee, { AndroidStyle,AndroidCategory, AndroidColor, EventType,AndroidI
 import {
  Alert
 } from 'react-native';
-import { initial ,notificationPress} from './function';
+import { initial ,notificationPress,actionPress} from './function';
 
 export default class NotificationHandler {
   
@@ -32,13 +32,28 @@ export default class NotificationHandler {
     initial()
 
     notifee.onForegroundEvent(async({ type, detail }) => {
+      switch(type){
+        case EventType.ACTION_PRESS:
+          actionPress(detail.pressAction.id);
+          break;
+        case EventType.PRESS:
+          notificationPress()
+          break;
+        case EventType.DISMISSED:
+          console.log('User dismissed notification',detail.notification);
+          alert(detail.notification.title)
+          break;
+      }
+    })
+/* 
+    notifee.onForegroundEvent(async({ type, detail }) => {
       if (type === EventType.ACTION_PRESS && detail.pressAction.id) {
         console.log('User pressed an action with the id: ', detail.pressAction.id);
       }
 
       if (type === EventType.PRESS) {
         console.log('User pressed notification',detail.notification);
-        /* alert(detail.notification.title) */
+      
         notificationPress();
 
       }
@@ -52,7 +67,7 @@ export default class NotificationHandler {
       if (type === EventType.ACTION_PRESS && detail.pressAction.id) {
         console.log('User pressed an action with the id: ', detail.pressAction.id);
       }
-    });
+    }); */
 
     notifee.registerForegroundService(() => {
       return new Promise(() => {

@@ -51,13 +51,13 @@ const setNotification=()=>{
       {
         title:'test 2',
         pressAction:{
-          id:'test1'
+          id:'test2'
         }
       },
       {
         title:'test 3',
         pressAction:{
-          id:'test1'
+          id:'test3'
         }
       }
     ],
