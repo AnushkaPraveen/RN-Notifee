@@ -27,6 +27,7 @@ useEffect(()=>{
  notificiationHandler.handleNotifee()
  const unsubscribe = messaging().onMessage(async remoteMessage => {
   console.log('A new FCM message arrived!', JSON.stringify(remoteMessage));
+  onDisplayNotification(remoteMessage);
 }); 
 
 return unsubscribe; 
@@ -94,7 +95,7 @@ const cancelNotification=()=>{
   notificiationHandler.cancelNotification('123')
 }
 
-  const onDisplayNotification=async()=>{
+  const onDisplayNotification=async(remoteMessage)=>{
     const channelId = await notifee.createChannel({
       id: 'default',
       name: 'Default Channel',
@@ -103,8 +104,8 @@ const cancelNotification=()=>{
     await notifee.requestPermission();
    await notifee.displayNotification({
      
-      title: 'Notification Title',
-      body: 'Main body content of the notification',
+      title: remoteMessage.notification.title,
+      body: remoteMessage.notification.body,
       android: {
         channelId,
         smallIcon: 'ic_launcher',  // optional, defaults to 'ic_launcher'.
