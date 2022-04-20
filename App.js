@@ -81,14 +81,14 @@ const setNotification=()=>{
 }
 const schedule=()=>{
   const payload={
-    dateTime:'04/12/2022 00:45:00'
+    dateTime:'04/21/2022 00:50:00'
   }
   notificiationHandler.scheduleNotification(payload)
 }
 const Timeschedule=()=>{
   const payload={
-    hour:1,
-    minute:0
+    hour:0,
+    minute:55
   }
   notificiationHandler.TimeScheduleNotification(payload)
 }
@@ -125,7 +125,18 @@ const cancelNotification=()=>{
   }
 
 
-  
+  const interval=()=>{
+    const payload={
+      channelId:'test41',
+      name:'default1f',
+      notificationId:'1243',
+      importance:4,
+      title:'Interval Trigger',
+      body:'This is interval trigger notifciation',
+      color:'#523b82',
+      foregroundService:false,}
+      notificiationHandler.IntervalScheduleNotification(payload)
+  }
 
 
 
@@ -183,6 +194,9 @@ const cancelNotification=()=>{
     </View>
     <View style={{marginTop:10}}>
     <Button title="Optimization" onPress={notificiationHandler.setBadgeCount}/>
+    </View>
+    <View style={{marginTop:10}}>
+    <Button title="Interval Trigger" onPress={interval}/>
     </View>
     </View>
   );
