@@ -27,7 +27,18 @@ useEffect(()=>{
  notificiationHandler.handleNotifee()
  const unsubscribe = messaging().onMessage(async remoteMessage => {
   console.log('A new FCM message arrived!', JSON.stringify(remoteMessage));
-  onDisplayNotification(remoteMessage);
+  /* onDisplayNotification(remoteMessage); */
+  const payload={
+    channelId:'test41',
+    name:'default1f',
+    notificationId:'1243',
+    importance:4,
+    title:remoteMessage.notification.title,
+    body:remoteMessage.notification.body,
+    color:'#523b82',
+    foregroundService:false,
+  }
+  notificiationHandler.getNotification(payload);
 }); 
 
 return unsubscribe; 
@@ -46,8 +57,8 @@ const setNotification=()=>{
     name:'default1f',
     notificationId:'1243',
     importance:4,
-    title:'Test upted check 1',
-    body:'This is notifciation pass by function hshdus suhdsihd sygdsud ugsdsdg sgdusgd gyudgs',
+    title:'Test Title',
+    body:'remoteMessage.notification.body',
     color:'#523b82',
     foregroundService:true,
     /* Icon:require('./app/wta.png'),  */
