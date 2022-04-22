@@ -459,7 +459,34 @@ IntervalScheduleNotification=async(payload)=> {
     await notifee.deleteChannel(channelId)
   }
 
+
+//Progress Indicators
   progressNotification=async(payload)=>{
+    
+ //notifee foreground event action handle (swicth)
+ notifee.onForegroundEvent(async({ type, detail }) => {
+  switch(type){
+    case EventType.ACTION_PRESS:
+      actionPress(detail.pressAction.id);
+      break;
+    case EventType.PRESS:
+      notificationPress()
+      break;
+    case EventType.DISMISSED:
+      console.log('User dismissed notification',detail.notification);
+      alert(detail.notification.title)
+      break;
+  }
+})
+notifee.registerForegroundService(() => {
+  return new Promise(() => {
+    // Long running task...
+  });
+});
+
+
+
+
 
     const channelId = await notifee.createChannel({
       id: payload.channelId || 'default',
@@ -470,13 +497,14 @@ IntervalScheduleNotification=async(payload)=> {
 
     notifee.displayNotification({
       id:payload.notificationId || '1111',
-      title:payload.title || 'Schedule Notification',
-      body: payload.body || 'This is Schedule Notification',
-      showTimestamp: true,
+      title:payload.title || '',
+      body: payload.body || '',
+      showTimestamp: payload.time|false,
       android: {
         channelId,
-        showTimestamp: payload.time || true,
+        showTimestamp: payload.time || false,
         ongoing:payload.ongoing || false,
+        style: { type: AndroidStyle.BIGTEXT, text: payload.body },
         progress: {
          max: payload.progressSize || 0,
           current: payload.currentSize || 0, 
@@ -549,6 +577,10 @@ setBadgeCount=(count)=>{
 }
 
 }
+getTriggerNotification=()=>{
+  notifee.getTriggerNotificationIds().then(ids => console.log('All trigger notifications: ', ids));
+}
+
 
 
 

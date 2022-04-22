@@ -138,6 +138,25 @@ const cancelNotification=()=>{
       notificiationHandler.IntervalScheduleNotification(payload)
   }
 
+  const progressIndicator=()=>{
+    const payload={
+      channelId:'asd',
+      name:'default1f',
+      notificationId:'1243',
+      importance:4,
+      visibility:0,
+      title:'Progress Indicator',
+      body:'This is progress indicator notifciation',
+      time:false,
+      ongoing:false,
+      progressSize:10,
+      currentSize:8,
+      indeterminate:false
+
+    }
+
+    notificiationHandler.progressNotification(payload)
+  }
 
 
   const batteryOptimizationEnabled =async()=>{
@@ -190,7 +209,7 @@ const cancelNotification=()=>{
     </View>
     
     <View style={{marginTop:10}}>
-    <Button title="Progress Notification" onPress={notificiationHandler.progressNotification}/>
+    <Button title="Progress Notification" onPress={progressIndicator}/>
     </View>
     <View style={{marginTop:10}}>
     <Button title="Optimization" onPress={notificiationHandler.setBadgeCount}/>
