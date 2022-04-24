@@ -543,7 +543,7 @@ notifee.registerForegroundService(() => {
 
 
 
-powerMangement=async()=>{
+powerManagement=async()=>{
  
 const powerManagerInfo = await notifee.getPowerManagerInfo();
 
@@ -574,6 +574,14 @@ getBadgeCount=()=>{
 }
 setBadgeCount=(count)=>{
   notifee.setBadgeCount(count).then(() => console.log('Badge count set!'));
+}
+
+incrementBadgeCount=(count)=>{
+  notifee.incrementBadgeCount(count)
+}
+
+decrementBadgeCounnt=(count)=>{
+  notifee.decrementBadgeCount(count)
 }
 
 }
