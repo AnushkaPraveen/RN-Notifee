@@ -32,10 +32,10 @@ const setNotification=()=>{
   const payload={
     channelId:'test41',
     name:'default1f',
-    notificationId:'1243',
+    /* notificationId:'1243', */
     importance:4,
-    title:'Test upted check 1',
-    body:'This is notifciation pass by function hshdus suhdsihd sygdsud ugsdsdg sgdusgd gyudgs',
+    title:'Press Action',
+    body:'This is action notifciation ',
     color:'#523b82',
     foregroundService:false,
     /* Icon:require('./app/wta.png'),  */
@@ -43,39 +43,53 @@ const setNotification=()=>{
     /* image:{type:0,picture:'https://media.istockphoto.com/photos/mountain-landscape-picture-id517188688'}, */
     AndroidActions:[
       {
-        title:'test',
+        title:'Action 1',
         pressAction:{
-          id:'test1'
+          id:'action1'
         }
       },
       {
-        title:'test 2',
+        title:'Action 2',
         pressAction:{
-          id:'test2'
+          id:'action2'
         }
       },
       {
-        title:'test 3',
+        title:'Action 3',
         pressAction:{
-          id:'test3'
+          id:'action3'
         }
       }
     ],
     IosActionId:'post',
     IosActions:[
       {
-        title:'test',
-        id:'test',
-        destructive: true,
+        title:'Action 1',
+        id:'action1',
+        destructive: false,
           // Only show if device is unlocked
           authenticationRequired: true,
-    }
+    },
+    {
+      title:'Action 2',
+      id:'action2',
+      destructive: false,
+        // Only show if device is unlocked
+        authenticationRequired: true,
+  },
+  {
+    title:'Action 3',
+    id:'action3',
+    destructive: false,
+      // Only show if device is unlocked
+      authenticationRequired: true,
+}
   ],
-  IosImage:[{
+  /* IosImage:[{
     
     url: 'https://media.istockphoto.com/photos/mountain-landscape-picture-id517188688',
     thumbnailHidden:false,
-  }],
+  }], */
   }
   notificiationHandler.getNotification(payload);
 }

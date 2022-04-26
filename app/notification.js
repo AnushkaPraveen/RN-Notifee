@@ -100,7 +100,7 @@ export default class NotificationHandler {
      ])     
 try{
     await notifee.displayNotification({
-      id: payload.notificationId || '111',
+      id: payload.notificationId,
       title: payload.title || 'default',
       subtitle:payload.subtitle || '',
       body: payload.body,
@@ -580,7 +580,7 @@ incrementBadgeCount=(count)=>{
   notifee.incrementBadgeCount(count)
 }
 
-decrementBadgeCounnt=(count)=>{
+decrementBadgeCount=(count)=>{
   notifee.decrementBadgeCount(count)
 }
 
