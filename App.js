@@ -95,14 +95,14 @@ const setNotification=()=>{
 }
 const schedule=()=>{
   const payload={
-    dateTime:'04/21/2022 00:50:00'
+    dateTime:'04/26/2022 23:22:00'
   }
   notificiationHandler.scheduleNotification(payload)
 }
 const Timeschedule=()=>{
   const payload={
-    hour:0,
-    minute:55
+    hour:23,
+    minute:25
   }
   notificiationHandler.TimeScheduleNotification(payload)
 }
@@ -230,6 +230,9 @@ const cancelNotification=()=>{
     </View>
     <View style={{marginTop:10}}>
     <Button title="Interval Trigger" onPress={interval}/>
+    </View>
+    <View style={{marginTop:10}}>
+    <Button title="Permission" onPress={notificiationHandler.getIOSPermission}/>
     </View>
     </View>
   );

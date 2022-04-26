@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 import { initial ,notificationPress,actionPress} from './function';
 
+
 export default class NotificationHandler {
   
   handleNotifee = () => {
@@ -29,13 +30,15 @@ export default class NotificationHandler {
   }
 
   getNotification = async (payload) => {
-  
-
+    this.getIOSPermission()
+    
+    
   //notifee foreground event action handle (swicth)
     notifee.onForegroundEvent(async({ type, detail }) => {
       switch(type){
         case EventType.ACTION_PRESS:
-          actionPress(detail.pressAction.id);
+          console.log(detail.pressAction.id)
+          actionPress();
           break;
         case EventType.PRESS:
           notificationPress()
@@ -100,7 +103,7 @@ export default class NotificationHandler {
      ])     
 try{
     await notifee.displayNotification({
-      id: payload.notificationId,
+      id: payload.notificationId || 'default',
       title: payload.title || 'default',
       subtitle:payload.subtitle || '',
       body: payload.body,
@@ -173,7 +176,7 @@ try{
     notifee.onForegroundEvent(async({ type, detail }) => {
       switch(type){
         case EventType.ACTION_PRESS:
-          actionPress(detail.pressAction.id);
+         /*  actionPress(detail.pressAction.id); */
           break;
         case EventType.PRESS:
           notificationPress()
@@ -286,7 +289,7 @@ try{
       });
     });
     
-        
+        console.log(payload);
         const date = new Date(Date.now());
         
         date.setHours(payload.hour);
