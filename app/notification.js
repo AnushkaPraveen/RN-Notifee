@@ -4,18 +4,8 @@ import notifee, { AndroidStyle,AndroidCategory, AndroidColor, EventType,AndroidI
 import {
  Alert
 } from 'react-native';
-import messaging from '@react-native-firebase/messaging';
+import { initial ,notificationPress,actionPress} from './function';
 
-
-
-
-
-/* onMessageReceived=async(message)=>{
-  console.log(message);
-}
-
-messaging().onMessage(onMessageReceived);
-messaging().setBackgroundMessageHandler(onMessageReceived); */
 
 export default class NotificationHandler {
   
@@ -44,14 +34,41 @@ export default class NotificationHandler {
   }
 
   getNotification = async (payload) => {
+    this.getIOSPermission()
+    
+    
+  //notifee foreground event action handle (swicth)
+    notifee.onForegroundEvent(async({ type, detail }) => {
+      switch(type){
+        case EventType.ACTION_PRESS:
+          console.log(detail.pressAction.id)
+          actionPress();
+          break;
+        case EventType.PRESS:
+          notificationPress()
+          break;
+        case EventType.DISMISSED:
+          console.log('User dismissed notification',detail.notification);
+          alert(detail.notification.title)
+          break;
+      }
+    })
+/* 
+//notifee foreground event action handle (if conditions)
 
     notifee.onForegroundEvent(async({ type, detail }) => {
       if (type === EventType.ACTION_PRESS && detail.pressAction.id) {
         console.log('User pressed an action with the id: ', detail.pressAction.id);
       }
 
+      if (type === EventType.PRESS) {
+        console.log('User pressed notification',detail.notification);
+        notificationPress();
+
+      }
       if (type === EventType.DISMISSED) {
-        console.log('User toggled app blocked');
+        console.log('User dismissed notification',detail.notification);
+        alert(detail.notification.title)
       }
     });
 
@@ -59,7 +76,7 @@ export default class NotificationHandler {
       if (type === EventType.ACTION_PRESS && detail.pressAction.id) {
         console.log('User pressed an action with the id: ', detail.pressAction.id);
       }
-    });
+    }); */
 
     notifee.registerForegroundService(() => {
       return new Promise(() => {
@@ -90,7 +107,7 @@ export default class NotificationHandler {
      ])     
 try{
     await notifee.displayNotification({
-      id: payload.notificationId || '111',
+      id: payload.notificationId || 'default',
       title: payload.title || 'default',
       subtitle:payload.subtitle || '',
       body: payload.body,
@@ -132,20 +149,6 @@ try{
   }
 
 
-  /* notifee.onForegroundEvent(({ type, detail }) => {
-    if (type === EventType.DISMISSED) {
-      console.log('User toggled app blocked', detail.blocked);
-    }
-  
-    if (type === EventType.CHANNEL_BLOCKED) {
-      console.log('User toggled channel block', detail.channel.id, detail.blocked);
-    }
-  
-    if (type === EventType.CHANNEL_GROUP_BLOCKED) {
-      console.log('User toggled channel group block', detail.channelGroup.id, detail.blocked);
-    }
-  }); */
-
 
   }
 
@@ -169,48 +172,286 @@ try{
 
 
    scheduleNotification=async(payload)=> {
-    const date = new Date(Date.now());
-    console.log(date);
-    date.setHours(15);
-    date.setMinutes(30);
-    console.log(date.getTime());
+     console.log('====================================');
+     console.log(payload);
+     console.log('====================================');
+
+    //notifee foreground event action handle (swicth)
+    notifee.onForegroundEvent(async({ type, detail }) => {
+      switch(type){
+        case EventType.ACTION_PRESS:
+         /*  actionPress(detail.pressAction.id); */
+          break;
+        case EventType.PRESS:
+          notificationPress()
+          break;
+        case EventType.DISMISSED:
+          console.log('User dismissed notification',detail.notification);
+          alert(detail.notification.title)
+          break;
+      }
+    })
+
+    notifee.registerForegroundService(() => {
+      return new Promise(() => {
+        // Long running task...
+      });
+    });
+    
+
+     
+    var date = new Date(payload.dateTime); 
 
     // Create a time-based trigger
-    const trigger= {
+   const trigger= {
       type: TriggerType.TIMESTAMP,
-      timestamp: date.getTime(), // fire at 11:10am (10 minutes before meeting)
-      repeatFrequency: payload.repeatType || undefined
-      
-    }; 
-
-  /*  const triggerrepeat = {
-      type: TriggerType.INTERVAL,
-      interval: 30,
-      timeUnit: TimeUnit.DAYS,
-      
-    };  */
-
-
-
+      timestamp:  date.getTime(), 
+      repeatFrequency: payload.repeatType || undefined ,
+   
+    };  
 
     const channelId = await notifee.createChannel({
-      id: 'default',
-      name: 'Default Channel',
+      id: payload.channelId || 'default',
+      name: payload.name || 'default channel',
+      importance: payload.importance || 3,
+      vibration: payload.vibration || true,
+      lights:payload.light || true,
+      visibility:payload.visibility || 0,
+    
     });
+    
+    await notifee.setNotificationCategories([
+      {
+          id: payload.IosActionId || 'default',
+          actions: 
+            payload.IosActions || []
+          
+        },
+     ])     
     // Create a trigger notification
     await notifee.createTriggerNotification(
       {
         id:payload.notificationId || '1111',
-        title:payload.title || 'Meeting with Jane',
-        body: 'Today at 11:20am',
+        title:payload.title || 'Date Schedule Notification',
+        body: payload.body || 'This is Schedule Notification',
         showTimestamp: true,
         android: {
           channelId,
+          largeIcon:payload.Icon || 'ic_launcher',
+          smallIcon: 'ic_launcher', // optional, defaults to 'ic_launcher'.
+          style: { type: AndroidStyle.BIGTEXT, text: payload.body },
+          style: payload.image || undefined,
+          showTimestamp: payload.time || true,
+          importance: payload.importance || 3,
+          color: payload.color || '#495371',
+          visibility:payload.visibility || 0,
+          ongoing:payload.ongoing || false,
+          asForegroundService: payload.foregroundService || false,
+          colorized: payload.colorized || false,
+          actions:payload.AndroidActions || [],
+        },
+        ios:{
+          categoryId: payload.IosActionId || 'default',
+          sound: 'default',
+          attachments: 
+            payload.IosImage || []
+          
+        },
+        foregroundPresentationOptions: {
+          alert: true,
+          badge: true,
+          sound: true,
         },
       },
       trigger,
     );
-  }
+  } 
+  
+
+
+
+  TimeScheduleNotification=async(payload)=> {
+    //notifee foreground event action handle (swicth)
+    notifee.onForegroundEvent(async({ type, detail }) => {
+      switch(type){
+        case EventType.ACTION_PRESS:
+          actionPress(detail.pressAction.id);
+          break;
+        case EventType.PRESS:
+          notificationPress()
+          break;
+        case EventType.DISMISSED:
+          console.log('User dismissed notification',detail.notification);
+          alert(detail.notification.title)
+          break;
+      }
+    })
+
+    notifee.registerForegroundService(() => {
+      return new Promise(() => {
+        // Long running task...
+      });
+    });
+    
+        console.log(payload);
+        const date = new Date(Date.now());
+        
+        date.setHours(payload.hour);
+        date.setMinutes(payload.minute);
+        
+    
+        // Create a time-based trigger
+        const trigger= {
+          type: TriggerType.TIMESTAMP,
+          timestamp:  date.getTime(), 
+          repeatFrequency: payload.repeatType || undefined 
+        
+        };  
+    
+        const channelId = await notifee.createChannel({
+          id: payload.channelId || 'default',
+          name: payload.name || 'default channel',
+          importance: payload.importance || 3,
+          vibration: payload.vibration || true,
+          lights:payload.light || true,
+          visibility:payload.visibility || 0,
+        
+        });
+        
+        await notifee.setNotificationCategories([
+          {
+              id: payload.IosActionId || 'default',
+              actions: 
+                payload.IosActions || []
+              
+            },
+         ])     
+        // Create a trigger notification
+        await notifee.createTriggerNotification(
+          {
+            id:payload.notificationId || '1111',
+            title:payload.title || 'Time Schedule Notification',
+            body: payload.body || 'This is Schedule Notification',
+            showTimestamp: true,
+            android: {
+              channelId,
+              largeIcon:payload.Icon || 'ic_launcher',
+              smallIcon: 'ic_launcher', // optional, defaults to 'ic_launcher'.
+              style: { type: AndroidStyle.BIGTEXT, text: payload.body },
+              style: payload.image || undefined,
+              showTimestamp: payload.time || true,
+              importance: payload.importance || 3,
+              color: payload.color || '#495371',
+              visibility:payload.visibility || 0,
+              ongoing:payload.ongoing || false,
+              asForegroundService: payload.foregroundService || false,
+              colorized: payload.colorized || false,
+              actions:payload.AndroidActions || [],
+            },
+            ios:{
+              categoryId: payload.IosActionId || 'default',
+              sound: 'default',
+              attachments: 
+                payload.IosImage || []
+              
+            },
+            foregroundPresentationOptions: {
+              alert: true,
+              badge: true,
+              sound: true,
+            },
+          },
+          trigger,
+        );
+      } 
+
+//Interval Trigger Notification
+IntervalScheduleNotification=async(payload)=> {   
+  //notifee foreground event action handle (swicth)
+  notifee.onForegroundEvent(async({ type, detail }) => {
+    switch(type){
+      case EventType.ACTION_PRESS:
+        actionPress(detail.pressAction.id);
+        break;
+      case EventType.PRESS:
+        notificationPress()
+        break;
+      case EventType.DISMISSED:
+        console.log('User dismissed notification',detail.notification);
+        alert(detail.notification.title)
+        break;
+    }
+  })
+  notifee.registerForegroundService(() => {
+    return new Promise(() => {
+      // Long running task...
+    });
+  });
+    
+       const IntervalTrigger = {
+          type: TriggerType.INTERVAL,
+          interval: payload.interval || 15,
+          timeUnit: payload.timeunit || "MINUTES",
+          
+        }; 
+    
+        const channelId = await notifee.createChannel({
+          id: payload.channelId || 'default',
+          name: payload.name || 'default channel',
+          importance: payload.importance || 3,
+          vibration: payload.vibration || true,
+          lights:payload.light || true,
+          visibility:payload.visibility || 0,
+        
+        });
+        
+        await notifee.setNotificationCategories([
+          {
+              id: payload.IosActionId || 'default',
+              actions: 
+                payload.IosActions || []
+              
+            },
+         ])     
+        // Create a trigger notification
+        await notifee.createTriggerNotification(
+          {
+            id:payload.notificationId || '1111',
+            title:payload.title || 'Time Schedule Notification',
+            body: payload.body || 'This is Schedule Notification',
+            showTimestamp: true,
+            android: {
+              channelId,
+              largeIcon:payload.Icon || 'ic_launcher',
+              smallIcon: 'ic_launcher', // optional, defaults to 'ic_launcher'.
+              style: { type: AndroidStyle.BIGTEXT, text: payload.body },
+              style: payload.image || undefined,
+              showTimestamp: payload.time || true,
+              importance: payload.importance || 3,
+              color: payload.color || '#495371',
+              visibility:payload.visibility || 0,
+              ongoing:payload.ongoing || false,
+              asForegroundService: payload.foregroundService || false,
+              colorized: payload.colorized || false,
+              actions:payload.AndroidActions || [],
+            },
+            ios:{
+              categoryId: payload.IosActionId || 'default',
+              sound: 'default',
+              attachments: 
+                payload.IosImage || []
+              
+            },
+            foregroundPresentationOptions: {
+              alert: true,
+              badge: true,
+              sound: true,
+            },
+          },
+          IntervalTrigger,
+        );
+      } 
+
 
 
 
@@ -225,23 +466,56 @@ try{
     await notifee.deleteChannel(channelId)
   }
 
-  progressNotification=async()=>{
+
+//Progress Indicators
+  progressNotification=async(payload)=>{
+    
+ //notifee foreground event action handle (swicth)
+ notifee.onForegroundEvent(async({ type, detail }) => {
+  switch(type){
+    case EventType.ACTION_PRESS:
+      actionPress(detail.pressAction.id);
+      break;
+    case EventType.PRESS:
+      notificationPress()
+      break;
+    case EventType.DISMISSED:
+      console.log('User dismissed notification',detail.notification);
+      alert(detail.notification.title)
+      break;
+  }
+})
+notifee.registerForegroundService(() => {
+  return new Promise(() => {
+    // Long running task...
+  });
+});
+
+
+
+
 
     const channelId = await notifee.createChannel({
-      id: 'default',
-      name:'default channel',
+      id: payload.channelId || 'default',
+      name: payload.name || 'default channel',
+      importance: payload.importance || 3,
+      visibility:payload.visibility || 0,
     });
 
     notifee.displayNotification({
-      title: 'Meeting with Jane',
-        body: 'Today at 11:20am',
+      id:payload.notificationId || '1111',
+      title:payload.title || '',
+      body: payload.body || '',
+      showTimestamp: payload.time|false,
       android: {
         channelId,
-       
+        showTimestamp: payload.time || false,
+        ongoing:payload.ongoing || false,
+        style: { type: AndroidStyle.BIGTEXT, text: payload.body },
         progress: {
-          max: 10,
-          current: 5,
-          indeterminate: false,
+         max: payload.progressSize || 0,
+          current: payload.currentSize || 0, 
+          indeterminate:payload.indeterminate || false,
         },
       },
     });
@@ -276,7 +550,7 @@ try{
 
 
 
-powerMangement=async()=>{
+powerManagement=async()=>{
  
 const powerManagerInfo = await notifee.getPowerManagerInfo();
 
@@ -309,6 +583,17 @@ setBadgeCount=(count)=>{
   notifee.setBadgeCount(count).then(() => console.log('Badge count set!'));
 }
 
+incrementBadgeCount=(count)=>{
+  notifee.incrementBadgeCount(count)
+}
+
+decrementBadgeCount=(count)=>{
+  notifee.decrementBadgeCount(count)
+}
+
+}
+getTriggerNotification=()=>{
+  notifee.getTriggerNotificationIds().then(ids => console.log('All trigger notifications: ', ids));
 }
 
 
@@ -318,25 +603,3 @@ setBadgeCount=(count)=>{
 
 
 
-/* await notifee.setNotificationCategories([
- {
-     id: 'post',
-     actions: [
-       {
-         id: 'like',
-         title: 'Reply',
-       },
-       {
-         id: 'dislike',
-         title: 'Close',
-       },
-     ],
-   },
-])
-
-notifee.onForegroundEvent(({type,detail})=>{
- console.log(type);
- if(type==EventType.ACTION_PRESS && detail.pressAction.id){
-     console.log('user pressed aan action with id:',detail.pressAction.id);
- }
-}) */

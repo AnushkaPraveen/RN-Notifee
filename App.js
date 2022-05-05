@@ -55,53 +55,83 @@ const setNotification=()=>{
   const payload={
     channelId:'test41',
     name:'default1f',
-    notificationId:'1243',
+    /* notificationId:'1243', */
     importance:4,
     title:'Test Title',
     body:'remoteMessage.notification.body',
     color:'#523b82',
-    foregroundService:true,
+    foregroundService:false,
     /* Icon:require('./app/wta.png'),  */
     /* Icon:'https://drive.google.com/file/d/1cwoCxrH7bC-v6hlddClZEPh3MPymvIrn/view?usp=sharing', */
     /* image:{type:0,picture:'https://media.istockphoto.com/photos/mountain-landscape-picture-id517188688'}, */
     AndroidActions:[
       {
-        title:'test',
+        title:'Action 1',
         pressAction:{
-          id:'test1'
+          id:'action1'
         }
       },
       {
-        title:'test 2',
+        title:'Action 2',
         pressAction:{
-          id:'test1'
+          id:'action2'
         }
       },
       {
-        title:'test 3',
+        title:'Action 3',
         pressAction:{
-          id:'test1'
+          id:'action3'
         }
       }
     ],
     IosActionId:'post',
     IosActions:[
       {
-        title:'test',
-        id:'test',
-        destructive: true,
+        title:'Action 1',
+        id:'action1',
+        destructive: false,
           // Only show if device is unlocked
           authenticationRequired: true,
-    }
+    },
+    {
+      title:'Action 2',
+      id:'action2',
+      destructive: false,
+        // Only show if device is unlocked
+        authenticationRequired: true,
+  },
+  {
+    title:'Action 3',
+    id:'action3',
+    destructive: false,
+      // Only show if device is unlocked
+      authenticationRequired: true,
+}
   ],
-  IosImage:[{
+  /* IosImage:[{
     
     url: 'https://media.istockphoto.com/photos/mountain-landscape-picture-id517188688',
     thumbnailHidden:false,
-  }],
+  }], */
   }
   notificiationHandler.getNotification(payload);
 }
+const schedule=()=>{
+  const payload={
+    dateTime:'04/26/2022 23:22:00'
+  }
+  notificiationHandler.scheduleNotification(payload)
+}
+const Timeschedule=()=>{
+  const payload={
+    hour:23,
+    minute:25
+  }
+  notificiationHandler.TimeScheduleNotification(payload)
+}
+
+
+
 const cancelNotification=()=>{
   notificiationHandler.cancelNotification('123')
 }
@@ -132,8 +162,38 @@ const cancelNotification=()=>{
   }
 
 
-  
+  const interval=()=>{
+    const payload={
+      channelId:'test41',
+      name:'default1f',
+      notificationId:'1243',
+      importance:4,
+      title:'Interval Trigger',
+      body:'This is interval trigger notifciation',
+      color:'#523b82',
+      foregroundService:false,}
+      notificiationHandler.IntervalScheduleNotification(payload)
+  }
 
+  const progressIndicator=()=>{
+    const payload={
+      channelId:'asd',
+      name:'default1f',
+      notificationId:'1243',
+      importance:4,
+      visibility:0,
+      title:'Progress Indicator',
+      body:'This is progress indicator notifciation',
+      time:false,
+      ongoing:false,
+      progressSize:10,
+      currentSize:8,
+      indeterminate:false
+
+    }
+
+    notificiationHandler.progressNotification(payload)
+  }
 
 
   const batteryOptimizationEnabled =async()=>{
@@ -179,13 +239,23 @@ const cancelNotification=()=>{
     <Button title="Cancel Notification" onPress={cancelNotification}/>
     </View>
     <View style={{marginTop:10}}>
-    <Button title="Schedule Notification" onPress={notificiationHandler.scheduleNotification}/>
+    <Button title="Schedule Notification" onPress={schedule}/>
     </View>
     <View style={{marginTop:10}}>
-    <Button title="Progress Notification" onPress={notificiationHandler.progressNotification}/>
+    <Button title="Time Schedule Notification" onPress={Timeschedule}/>
+    </View>
+    
+    <View style={{marginTop:10}}>
+    <Button title="Progress Notification" onPress={progressIndicator}/>
     </View>
     <View style={{marginTop:10}}>
     <Button title="Optimization" onPress={notificiationHandler.setBadgeCount}/>
+    </View>
+    <View style={{marginTop:10}}>
+    <Button title="Interval Trigger" onPress={interval}/>
+    </View>
+    <View style={{marginTop:10}}>
+    <Button title="Permission" onPress={notificiationHandler.getIOSPermission}/>
     </View>
     </View>
   );
