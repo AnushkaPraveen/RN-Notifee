@@ -29,6 +29,29 @@ export default class NotificationHandler {
     
   }
 
+  setChannel=async(payload)=>{
+    console.log(payload);
+    await notifee.createChannel({
+        id: payload.channelId || 'default',
+        name: payload.name || 'default channel',
+        importance:payload.importance || 3,
+        vibration: payload.vibration || false,
+        visibility: payload.visibility || 0,
+      });
+  }
+
+  setCategories = async(payload)=>{
+  await notifee.setNotificationCategories([
+      {
+          id: payload.IosActionId || undefined,
+      actions: payload.IosActions || []
+
+      }
+
+    ])
+  }
+
+
   getNotification = async (payload) => {
     this.getIOSPermission()
     
@@ -96,8 +119,7 @@ export default class NotificationHandler {
     await notifee.setNotificationCategories([
       {
           id: payload.IosActionId || 'default',
-          actions: 
-            payload.IosActions || []
+          actions:payload.IosActions || []
           
         },
      ])     
@@ -129,8 +151,7 @@ try{
       ios:{
         categoryId: payload.IosActionId || 'default',
         sound: 'default',
-        attachments: 
-          payload.IosImage || []
+        attachments:payload.IosImage || []
         
       },
       foregroundPresentationOptions: {
@@ -142,13 +163,8 @@ try{
     })
   }catch(e){
     console.log(e);
+   }
   }
-
-
-
-  }
-
-
 
   updateNotification=async(payload)=>{
     const channelId = await notifee.createChannel({
@@ -219,8 +235,7 @@ try{
     await notifee.setNotificationCategories([
       {
           id: payload.IosActionId || 'default',
-          actions: 
-            payload.IosActions || []
+          actions: payload.IosActions || []
           
         },
      ])     
@@ -230,7 +245,7 @@ try{
         id:payload.notificationId || '1111',
         title:payload.title || 'Date Schedule Notification',
         body: payload.body || 'This is Schedule Notification',
-        showTimestamp: true,
+        // showTimestamp: true,
         android: {
           channelId,
           largeIcon:payload.Icon || 'ic_launcher',
@@ -249,8 +264,7 @@ try{
         ios:{
           categoryId: payload.IosActionId || 'default',
           sound: 'default',
-          attachments: 
-            payload.IosImage || []
+          attachments: payload.IosImage || []
           
         },
         foregroundPresentationOptions: {
@@ -290,10 +304,10 @@ try{
     });
     
         console.log(payload);
-        const date = new Date(Date.now());
+        const date = new Date(payload.timeValue);
         
-        date.setHours(payload.hour);
-        date.setMinutes(payload.minute);
+        // date.setHours(payload.hour);
+        // date.setMinutes(payload.minute);
         
     
         // Create a time-based trigger
@@ -317,8 +331,7 @@ try{
         await notifee.setNotificationCategories([
           {
               id: payload.IosActionId || 'default',
-              actions: 
-                payload.IosActions || []
+              actions: payload.IosActions || []
               
             },
          ])     
@@ -328,7 +341,6 @@ try{
             id:payload.notificationId || '1111',
             title:payload.title || 'Time Schedule Notification',
             body: payload.body || 'This is Schedule Notification',
-            showTimestamp: true,
             android: {
               channelId,
               largeIcon:payload.Icon || 'ic_launcher',
@@ -404,8 +416,7 @@ IntervalScheduleNotification=async(payload)=> {
         await notifee.setNotificationCategories([
           {
               id: payload.IosActionId || 'default',
-              actions: 
-                payload.IosActions || []
+              actions: payload.IosActions || []
               
             },
          ])     
@@ -415,7 +426,7 @@ IntervalScheduleNotification=async(payload)=> {
             id:payload.notificationId || '1111',
             title:payload.title || 'Time Schedule Notification',
             body: payload.body || 'This is Schedule Notification',
-            showTimestamp: true,
+            // showTimestamp: true,
             android: {
               channelId,
               largeIcon:payload.Icon || 'ic_launcher',
@@ -496,6 +507,7 @@ notifee.registerForegroundService(() => {
       name: payload.name || 'default channel',
       importance: payload.importance || 3,
       visibility:payload.visibility || 0,
+      vibration: payload.vibration || true,
     });
 
     notifee.displayNotification({
@@ -507,6 +519,7 @@ notifee.registerForegroundService(() => {
         channelId,
         showTimestamp: payload.time || false,
         ongoing:payload.ongoing || false,
+        color:payload.color || '#FF0000', 
         style: { type: AndroidStyle.BIGTEXT, text: payload.body },
         progress: {
          max: payload.progressSize || 0,
@@ -573,7 +586,8 @@ if (powerManagerInfo.activity) {
 };}
 
 getBadgeCount=()=>{
-  notifee.getBadgeCount().then(count => console.log('Current badge count: ', count));
+  return  await notifee.getBadgeCount();
+  // notifee.getBadgeCount().then(count => console.log('Current badge count: ', count));
 }
 setBadgeCount=(count)=>{
   notifee.setBadgeCount(count).then(() => console.log('Badge count set!'));
@@ -589,7 +603,8 @@ decrementBadgeCount=(count)=>{
 
 }
 getTriggerNotification=()=>{
-  notifee.getTriggerNotificationIds().then(ids => console.log('All trigger notifications: ', ids));
+  return await notifee.getTriggerNotificationIds()
+  // notifee.getTriggerNotificationIds().then(ids => console.log('All trigger notifications: ', ids));
 }
 
 
